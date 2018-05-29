@@ -1,0 +1,22 @@
+var _user$project$Router$matchers = _evancz$url_parser$UrlParser$oneOf(
+	{
+		ctor: '::',
+		_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Types$HomeRoute, _evancz$url_parser$UrlParser$top),
+		_1: {
+			ctor: '::',
+			_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Types$PostcodeRoute, _evancz$url_parser$UrlParser$string),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Router$parseLocation = function (location) {
+	var _p0 = A2(_evancz$url_parser$UrlParser$parsePath, _user$project$Router$matchers, location);
+	if (_p0.ctor === 'Just') {
+		return _p0._0;
+	} else {
+		return _user$project$Types$NotFoundRoute;
+	}
+};
+var _user$project$Router$postcodePath = function (postcode) {
+	return postcode;
+};
+var _user$project$Router$homePath = '/';
