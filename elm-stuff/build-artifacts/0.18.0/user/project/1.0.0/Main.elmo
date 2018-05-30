@@ -90,6 +90,60 @@ var _user$project$Main$viewInfo = function (_p2) {
 			}
 		});
 };
+var _user$project$Main$page = function (model) {
+	var _p5 = model.route;
+	switch (_p5.ctor) {
+		case 'HomeRoute':
+			return A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Enter a postcode above'),
+					_1: {ctor: '[]'}
+				});
+		case 'PostcodeRoute':
+			var combinedResponse = A3(
+				_krisajenkins$remotedata$RemoteData$map2,
+				F2(
+					function (v0, v1) {
+						return {ctor: '_Tuple2', _0: v0, _1: v1};
+					}),
+				model.locationInfo,
+				model.nearestInfo);
+			var _p6 = combinedResponse;
+			switch (_p6.ctor) {
+				case 'NotAsked':
+					return _elm_lang$html$Html$text('Initialising.');
+				case 'Loading':
+					return A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Loading.'),
+							_1: {ctor: '[]'}
+						});
+				case 'Failure':
+					return _user$project$Main$viewServerError(_p6._0);
+				default:
+					return _user$project$Main$viewInfo(_p6._0);
+			}
+		case 'InvalidRoute':
+			var _p7 = _elm_lang$core$List$head(_p5._0.context);
+			if (_p7.ctor === 'Just') {
+				return _elm_lang$html$Html$text(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'The ',
+						A2(_elm_lang$core$Basics_ops['++'], _p7._0.description, ' of your postcode is incorrect.')));
+			} else {
+				return _elm_lang$html$Html$text('There is a problem with your postcode.');
+			}
+		default:
+			return _elm_lang$html$Html$text('Not Found');
+	}
+};
 var _user$project$Main$initialModel = function (route) {
 	return {
 		route: route,
@@ -97,11 +151,11 @@ var _user$project$Main$initialModel = function (route) {
 		locationInfo: _krisajenkins$remotedata$RemoteData$NotAsked,
 		nearestInfo: _krisajenkins$remotedata$RemoteData$NotAsked,
 		postcode: 'CB3 0FA',
-		validPostcode: _user$project$Types$parsePostcode('CB3 0FA')
+		validPostcode: _user$project$PostcodeParser$parsePostcode('CB3 0FA')
 	};
 };
 var _user$project$Main$GetNearestInfoFromWeb = {ctor: 'GetNearestInfoFromWeb'};
-var _user$project$Main$GetDataFromWeb = {ctor: 'GetDataFromWeb'};
+var _user$project$Main$GetLocationInfoFromWeb = {ctor: 'GetLocationInfoFromWeb'};
 var _user$project$Main$ChangePostcode = function (a) {
 	return {ctor: 'ChangePostcode', _0: a};
 };
@@ -138,11 +192,11 @@ var _user$project$Main$update = F2(
 	function (msg, model) {
 		update:
 		while (true) {
-			var _p5 = msg;
-			switch (_p5.ctor) {
+			var _p8 = msg;
+			switch (_p8.ctor) {
 				case 'ChangeLocation':
-					var _p8 = _p5._0;
-					if (_elm_lang$core$Native_Utils.eq(_p8, '') || _elm_lang$core$Native_Utils.eq(_p8, '/')) {
+					var _p11 = _p8._0;
+					if (_elm_lang$core$Native_Utils.eq(_p11, '') || _elm_lang$core$Native_Utils.eq(_p11, '/')) {
 						return {
 							ctor: '_Tuple2',
 							_0: _elm_lang$core$Native_Utils.update(
@@ -151,18 +205,18 @@ var _user$project$Main$update = F2(
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					} else {
-						var validatedPostcode = _user$project$Types$parsePostcode(_p8);
-						var _p6 = validatedPostcode;
-						if (_p6.ctor === 'Ok') {
-							var _p7 = _p6._0;
+						var validatedPostcode = _user$project$PostcodeParser$parsePostcode(_p11);
+						var _p9 = validatedPostcode;
+						if (_p9.ctor === 'Ok') {
+							var _p10 = _p9._0;
 							return {
 								ctor: '_Tuple2',
 								_0: _elm_lang$core$Native_Utils.update(
 									model,
 									{
-										history: {ctor: '::', _0: _p7, _1: model.history}
+										history: {ctor: '::', _0: _p10, _1: model.history}
 									}),
-								_1: _elm_lang$navigation$Navigation$newUrl(_p7)
+								_1: _elm_lang$navigation$Navigation$newUrl(_p10)
 							};
 						} else {
 							return {
@@ -170,14 +224,14 @@ var _user$project$Main$update = F2(
 								_0: _elm_lang$core$Native_Utils.update(
 									model,
 									{
-										route: _user$project$Types$InvalidRoute(_p6._0)
+										route: _user$project$Types$InvalidRoute(_p9._0)
 									}),
 								_1: _elm_lang$core$Platform_Cmd$none
 							};
 						}
 					}
 				case 'OnLocationChange':
-					var _p9 = _p5._0;
+					var _p12 = _p8._0;
 					var decodedPostcodeUrl = A2(
 						_elm_lang$core$Maybe$withDefault,
 						'',
@@ -185,46 +239,38 @@ var _user$project$Main$update = F2(
 							A2(
 								_elm_lang$core$Maybe$withDefault,
 								'',
-								A2(_evancz$url_parser$UrlParser$parsePath, _evancz$url_parser$UrlParser$string, _p9))));
-					var newRoute = _user$project$Router$parseLocation(_p9);
-					var _v4 = _user$project$Main$GetDataFromWeb,
-						_v5 = _elm_lang$core$Native_Utils.update(
+								A2(_evancz$url_parser$UrlParser$parsePath, _evancz$url_parser$UrlParser$string, _p12))));
+					var newRoute = _user$project$Router$parseLocation(_p12);
+					var _v7 = _user$project$Main$GetLocationInfoFromWeb,
+						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							route: newRoute,
 							postcode: decodedPostcodeUrl,
-							validPostcode: _user$project$Types$parsePostcode(decodedPostcodeUrl)
+							validPostcode: _user$project$PostcodeParser$parsePostcode(decodedPostcodeUrl)
 						});
-					msg = _v4;
-					model = _v5;
+					msg = _v7;
+					model = _v8;
 					continue update;
 				case 'LocationInfoResponse':
-					var _v6 = _user$project$Main$GetNearestInfoFromWeb,
-						_v7 = _elm_lang$core$Native_Utils.update(
+					var _v9 = _user$project$Main$GetNearestInfoFromWeb,
+						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
-						{locationInfo: _p5._0});
-					msg = _v6;
-					model = _v7;
+						{locationInfo: _p8._0});
+					msg = _v9;
+					model = _v10;
 					continue update;
 				case 'NearestInfoResponse':
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{nearestInfo: _p5._0}),
+							{nearestInfo: _p8._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
-				case 'ChangePostcode':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{postcode: _p5._0}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'GetDataFromWeb':
-					var _p10 = model.validPostcode;
-					if (_p10.ctor === 'Ok') {
+				case 'GetLocationInfoFromWeb':
+					var _p13 = model.validPostcode;
+					if (_p13.ctor === 'Ok') {
 						return {
 							ctor: '_Tuple2',
 							_0: model,
@@ -233,9 +279,9 @@ var _user$project$Main$update = F2(
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
-				default:
-					var _p11 = model.validPostcode;
-					if (_p11.ctor === 'Ok') {
+				case 'GetNearestInfoFromWeb':
+					var _p14 = model.validPostcode;
+					if (_p14.ctor === 'Ok') {
 						return {
 							ctor: '_Tuple2',
 							_0: model,
@@ -244,6 +290,14 @@ var _user$project$Main$update = F2(
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{postcode: _p8._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 			}
 		}
 	});
@@ -317,64 +371,6 @@ var _user$project$Main$viewHistory = function (history) {
 		_elm_lang$html$Html$ul,
 		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _user$project$Main$historyLinks, history));
-};
-var _user$project$Main$page = function (model) {
-	var _p12 = model.route;
-	switch (_p12.ctor) {
-		case 'HomeRoute':
-			return A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Enter a postcode above'),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$viewHistory(model.history),
-						_1: {ctor: '[]'}
-					}
-				});
-		case 'PostcodeRoute':
-			var combinedResponse = A3(
-				_krisajenkins$remotedata$RemoteData$map2,
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				model.locationInfo,
-				model.nearestInfo);
-			var _p13 = combinedResponse;
-			switch (_p13.ctor) {
-				case 'NotAsked':
-					return _elm_lang$html$Html$text('Initialising.');
-				case 'Loading':
-					return A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Loading.'),
-							_1: {ctor: '[]'}
-						});
-				case 'Failure':
-					return _user$project$Main$viewServerError(_p13._0);
-				default:
-					return _user$project$Main$viewInfo(_p13._0);
-			}
-		case 'InvalidRoute':
-			var _p14 = _elm_lang$core$List$head(_p12._0.context);
-			if (_p14.ctor === 'Just') {
-				return _elm_lang$html$Html$text(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'The ',
-						A2(_elm_lang$core$Basics_ops['++'], _p14._0.description, ' of your postcode is incorrect.')));
-			} else {
-				return _elm_lang$html$Html$text('There is a problem with your postcode.');
-			}
-		default:
-			return _elm_lang$html$Html$text('Not Found');
-	}
 };
 var _user$project$Main$view = function (model) {
 	return A2(
@@ -476,7 +472,11 @@ var _user$project$Main$view = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _user$project$Main$page(model),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$viewHistory(model.history),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };

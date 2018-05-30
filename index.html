@@ -15029,122 +15029,6 @@ var _krisajenkins$remotedata$RemoteData$update = F2(
 				};
 		}
 	});
-var _user$project$Types$spaces = A2(
-	_elm_tools$parser$Parser$ignore,
-	_elm_tools$parser$Parser$zeroOrMore,
-	function (c) {
-		return _elm_lang$core$Native_Utils.eq(
-			c,
-			_elm_lang$core$Native_Utils.chr(' '));
-	});
-var _user$project$Types$postcodeSecond = A2(
-	_elm_tools$parser$Parser$inContext,
-	'second part',
-	_elm_tools$parser$Parser$source(
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser$ignore,
-				_elm_tools$parser$Parser$Exactly(1),
-				_elm_lang$core$Char$isDigit),
-			A2(
-				_elm_tools$parser$Parser$ignore,
-				_elm_tools$parser$Parser$Exactly(2),
-				_elm_lang$core$Char$isUpper))));
-var _user$project$Types$postcodeFirst = A2(
-	_elm_tools$parser$Parser$inContext,
-	'first part',
-	_elm_tools$parser$Parser$source(
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				A2(
-					_elm_tools$parser$Parser_ops['|.'],
-					A2(
-						_elm_tools$parser$Parser_ops['|.'],
-						A2(
-							_elm_tools$parser$Parser_ops['|.'],
-							A2(
-								_elm_tools$parser$Parser_ops['|.'],
-								A2(
-									_elm_tools$parser$Parser$ignore,
-									_elm_tools$parser$Parser$Exactly(1),
-									_elm_lang$core$Char$isUpper),
-								_elm_tools$parser$Parser$oneOf(
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_tools$parser$Parser$ignore,
-											_elm_tools$parser$Parser$Exactly(1),
-											_elm_lang$core$Char$isUpper),
-										_1: {
-											ctor: '::',
-											_0: _elm_tools$parser$Parser$succeed(
-												{ctor: '_Tuple0'}),
-											_1: {ctor: '[]'}
-										}
-									})),
-							A2(
-								_elm_tools$parser$Parser$ignore,
-								_elm_tools$parser$Parser$Exactly(1),
-								_elm_lang$core$Char$isDigit)),
-						_elm_tools$parser$Parser$oneOf(
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_tools$parser$Parser$ignore,
-									_elm_tools$parser$Parser$Exactly(1),
-									_elm_lang$core$Char$isDigit),
-								_1: {
-									ctor: '::',
-									_0: _elm_tools$parser$Parser$succeed(
-										{ctor: '_Tuple0'}),
-									_1: {ctor: '[]'}
-								}
-							})),
-					_elm_tools$parser$Parser$oneOf(
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_tools$parser$Parser$ignore,
-								_elm_tools$parser$Parser$Exactly(1),
-								_elm_lang$core$Char$isUpper),
-							_1: {
-								ctor: '::',
-								_0: _elm_tools$parser$Parser$succeed(
-									{ctor: '_Tuple0'}),
-								_1: {ctor: '[]'}
-							}
-						})),
-				_user$project$Types$spaces),
-			_elm_tools$parser$Parser$end)));
-var _user$project$Types$parsePostcode = function (postcode) {
-	var pcSecond = _elm_lang$core$String$toUpper(
-		A2(
-			_elm_lang$core$String$right,
-			3,
-			_elm_lang$core$String$trim(postcode)));
-	var parsedSecond = A2(_elm_tools$parser$Parser$run, _user$project$Types$postcodeSecond, pcSecond);
-	var pcFirst = _elm_lang$core$String$toUpper(
-		_elm_lang$core$String$trim(
-			A2(
-				_elm_lang$core$String$dropRight,
-				3,
-				_elm_lang$core$String$trim(postcode))));
-	var parsedFirst = A2(_elm_tools$parser$Parser$run, _user$project$Types$postcodeFirst, pcFirst);
-	return A3(
-		_elm_lang$core$Result$map2,
-		F2(
-			function (b, a) {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					a,
-					A2(_elm_lang$core$Basics_ops['++'], ' ', b));
-			}),
-		parsedSecond,
-		parsedFirst);
-};
 var _user$project$Types$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {route: a, history: b, locationInfo: c, nearestInfo: d, postcode: e, validPostcode: f};
@@ -15230,6 +15114,122 @@ var _user$project$Router$postcodePath = function (postcode) {
 	return postcode;
 };
 var _user$project$Router$homePath = '/';
+var _user$project$PostcodeParser$spaces = A2(
+	_elm_tools$parser$Parser$ignore,
+	_elm_tools$parser$Parser$zeroOrMore,
+	function (c) {
+		return _elm_lang$core$Native_Utils.eq(
+			c,
+			_elm_lang$core$Native_Utils.chr(' '));
+	});
+var _user$project$PostcodeParser$postcodeSecond = A2(
+	_elm_tools$parser$Parser$inContext,
+	'second part',
+	_elm_tools$parser$Parser$source(
+		A2(
+			_elm_tools$parser$Parser_ops['|.'],
+			A2(
+				_elm_tools$parser$Parser$ignore,
+				_elm_tools$parser$Parser$Exactly(1),
+				_elm_lang$core$Char$isDigit),
+			A2(
+				_elm_tools$parser$Parser$ignore,
+				_elm_tools$parser$Parser$Exactly(2),
+				_elm_lang$core$Char$isUpper))));
+var _user$project$PostcodeParser$postcodeFirst = A2(
+	_elm_tools$parser$Parser$inContext,
+	'first part',
+	_elm_tools$parser$Parser$source(
+		A2(
+			_elm_tools$parser$Parser_ops['|.'],
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				A2(
+					_elm_tools$parser$Parser_ops['|.'],
+					A2(
+						_elm_tools$parser$Parser_ops['|.'],
+						A2(
+							_elm_tools$parser$Parser_ops['|.'],
+							A2(
+								_elm_tools$parser$Parser_ops['|.'],
+								A2(
+									_elm_tools$parser$Parser$ignore,
+									_elm_tools$parser$Parser$Exactly(1),
+									_elm_lang$core$Char$isUpper),
+								_elm_tools$parser$Parser$oneOf(
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_tools$parser$Parser$ignore,
+											_elm_tools$parser$Parser$Exactly(1),
+											_elm_lang$core$Char$isUpper),
+										_1: {
+											ctor: '::',
+											_0: _elm_tools$parser$Parser$succeed(
+												{ctor: '_Tuple0'}),
+											_1: {ctor: '[]'}
+										}
+									})),
+							A2(
+								_elm_tools$parser$Parser$ignore,
+								_elm_tools$parser$Parser$Exactly(1),
+								_elm_lang$core$Char$isDigit)),
+						_elm_tools$parser$Parser$oneOf(
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_tools$parser$Parser$ignore,
+									_elm_tools$parser$Parser$Exactly(1),
+									_elm_lang$core$Char$isDigit),
+								_1: {
+									ctor: '::',
+									_0: _elm_tools$parser$Parser$succeed(
+										{ctor: '_Tuple0'}),
+									_1: {ctor: '[]'}
+								}
+							})),
+					_elm_tools$parser$Parser$oneOf(
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_tools$parser$Parser$ignore,
+								_elm_tools$parser$Parser$Exactly(1),
+								_elm_lang$core$Char$isUpper),
+							_1: {
+								ctor: '::',
+								_0: _elm_tools$parser$Parser$succeed(
+									{ctor: '_Tuple0'}),
+								_1: {ctor: '[]'}
+							}
+						})),
+				_user$project$PostcodeParser$spaces),
+			_elm_tools$parser$Parser$end)));
+var _user$project$PostcodeParser$parsePostcode = function (postcode) {
+	var pcSecond = _elm_lang$core$String$toUpper(
+		A2(
+			_elm_lang$core$String$right,
+			3,
+			_elm_lang$core$String$trim(postcode)));
+	var parsedSecond = A2(_elm_tools$parser$Parser$run, _user$project$PostcodeParser$postcodeSecond, pcSecond);
+	var pcFirst = _elm_lang$core$String$toUpper(
+		_elm_lang$core$String$trim(
+			A2(
+				_elm_lang$core$String$dropRight,
+				3,
+				_elm_lang$core$String$trim(postcode))));
+	var parsedFirst = A2(_elm_tools$parser$Parser$run, _user$project$PostcodeParser$postcodeFirst, pcFirst);
+	return A3(
+		_elm_lang$core$Result$map2,
+		F2(
+			function (b, a) {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					a,
+					A2(_elm_lang$core$Basics_ops['++'], ' ', b));
+			}),
+		parsedSecond,
+		parsedFirst);
+};
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -15322,6 +15322,60 @@ var _user$project$Main$viewInfo = function (_p2) {
 			}
 		});
 };
+var _user$project$Main$page = function (model) {
+	var _p5 = model.route;
+	switch (_p5.ctor) {
+		case 'HomeRoute':
+			return A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Enter a postcode above'),
+					_1: {ctor: '[]'}
+				});
+		case 'PostcodeRoute':
+			var combinedResponse = A3(
+				_krisajenkins$remotedata$RemoteData$map2,
+				F2(
+					function (v0, v1) {
+						return {ctor: '_Tuple2', _0: v0, _1: v1};
+					}),
+				model.locationInfo,
+				model.nearestInfo);
+			var _p6 = combinedResponse;
+			switch (_p6.ctor) {
+				case 'NotAsked':
+					return _elm_lang$html$Html$text('Initialising.');
+				case 'Loading':
+					return A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Loading.'),
+							_1: {ctor: '[]'}
+						});
+				case 'Failure':
+					return _user$project$Main$viewServerError(_p6._0);
+				default:
+					return _user$project$Main$viewInfo(_p6._0);
+			}
+		case 'InvalidRoute':
+			var _p7 = _elm_lang$core$List$head(_p5._0.context);
+			if (_p7.ctor === 'Just') {
+				return _elm_lang$html$Html$text(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'The ',
+						A2(_elm_lang$core$Basics_ops['++'], _p7._0.description, ' of your postcode is incorrect.')));
+			} else {
+				return _elm_lang$html$Html$text('There is a problem with your postcode.');
+			}
+		default:
+			return _elm_lang$html$Html$text('Not Found');
+	}
+};
 var _user$project$Main$initialModel = function (route) {
 	return {
 		route: route,
@@ -15329,11 +15383,11 @@ var _user$project$Main$initialModel = function (route) {
 		locationInfo: _krisajenkins$remotedata$RemoteData$NotAsked,
 		nearestInfo: _krisajenkins$remotedata$RemoteData$NotAsked,
 		postcode: 'CB3 0FA',
-		validPostcode: _user$project$Types$parsePostcode('CB3 0FA')
+		validPostcode: _user$project$PostcodeParser$parsePostcode('CB3 0FA')
 	};
 };
 var _user$project$Main$GetNearestInfoFromWeb = {ctor: 'GetNearestInfoFromWeb'};
-var _user$project$Main$GetDataFromWeb = {ctor: 'GetDataFromWeb'};
+var _user$project$Main$GetLocationInfoFromWeb = {ctor: 'GetLocationInfoFromWeb'};
 var _user$project$Main$ChangePostcode = function (a) {
 	return {ctor: 'ChangePostcode', _0: a};
 };
@@ -15370,11 +15424,11 @@ var _user$project$Main$update = F2(
 	function (msg, model) {
 		update:
 		while (true) {
-			var _p5 = msg;
-			switch (_p5.ctor) {
+			var _p8 = msg;
+			switch (_p8.ctor) {
 				case 'ChangeLocation':
-					var _p8 = _p5._0;
-					if (_elm_lang$core$Native_Utils.eq(_p8, '') || _elm_lang$core$Native_Utils.eq(_p8, '/')) {
+					var _p11 = _p8._0;
+					if (_elm_lang$core$Native_Utils.eq(_p11, '') || _elm_lang$core$Native_Utils.eq(_p11, '/')) {
 						return {
 							ctor: '_Tuple2',
 							_0: _elm_lang$core$Native_Utils.update(
@@ -15383,18 +15437,18 @@ var _user$project$Main$update = F2(
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					} else {
-						var validatedPostcode = _user$project$Types$parsePostcode(_p8);
-						var _p6 = validatedPostcode;
-						if (_p6.ctor === 'Ok') {
-							var _p7 = _p6._0;
+						var validatedPostcode = _user$project$PostcodeParser$parsePostcode(_p11);
+						var _p9 = validatedPostcode;
+						if (_p9.ctor === 'Ok') {
+							var _p10 = _p9._0;
 							return {
 								ctor: '_Tuple2',
 								_0: _elm_lang$core$Native_Utils.update(
 									model,
 									{
-										history: {ctor: '::', _0: _p7, _1: model.history}
+										history: {ctor: '::', _0: _p10, _1: model.history}
 									}),
-								_1: _elm_lang$navigation$Navigation$newUrl(_p7)
+								_1: _elm_lang$navigation$Navigation$newUrl(_p10)
 							};
 						} else {
 							return {
@@ -15402,14 +15456,14 @@ var _user$project$Main$update = F2(
 								_0: _elm_lang$core$Native_Utils.update(
 									model,
 									{
-										route: _user$project$Types$InvalidRoute(_p6._0)
+										route: _user$project$Types$InvalidRoute(_p9._0)
 									}),
 								_1: _elm_lang$core$Platform_Cmd$none
 							};
 						}
 					}
 				case 'OnLocationChange':
-					var _p9 = _p5._0;
+					var _p12 = _p8._0;
 					var decodedPostcodeUrl = A2(
 						_elm_lang$core$Maybe$withDefault,
 						'',
@@ -15417,46 +15471,38 @@ var _user$project$Main$update = F2(
 							A2(
 								_elm_lang$core$Maybe$withDefault,
 								'',
-								A2(_evancz$url_parser$UrlParser$parsePath, _evancz$url_parser$UrlParser$string, _p9))));
-					var newRoute = _user$project$Router$parseLocation(_p9);
-					var _v4 = _user$project$Main$GetDataFromWeb,
-						_v5 = _elm_lang$core$Native_Utils.update(
+								A2(_evancz$url_parser$UrlParser$parsePath, _evancz$url_parser$UrlParser$string, _p12))));
+					var newRoute = _user$project$Router$parseLocation(_p12);
+					var _v7 = _user$project$Main$GetLocationInfoFromWeb,
+						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							route: newRoute,
 							postcode: decodedPostcodeUrl,
-							validPostcode: _user$project$Types$parsePostcode(decodedPostcodeUrl)
+							validPostcode: _user$project$PostcodeParser$parsePostcode(decodedPostcodeUrl)
 						});
-					msg = _v4;
-					model = _v5;
+					msg = _v7;
+					model = _v8;
 					continue update;
 				case 'LocationInfoResponse':
-					var _v6 = _user$project$Main$GetNearestInfoFromWeb,
-						_v7 = _elm_lang$core$Native_Utils.update(
+					var _v9 = _user$project$Main$GetNearestInfoFromWeb,
+						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
-						{locationInfo: _p5._0});
-					msg = _v6;
-					model = _v7;
+						{locationInfo: _p8._0});
+					msg = _v9;
+					model = _v10;
 					continue update;
 				case 'NearestInfoResponse':
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{nearestInfo: _p5._0}),
+							{nearestInfo: _p8._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
-				case 'ChangePostcode':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{postcode: _p5._0}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'GetDataFromWeb':
-					var _p10 = model.validPostcode;
-					if (_p10.ctor === 'Ok') {
+				case 'GetLocationInfoFromWeb':
+					var _p13 = model.validPostcode;
+					if (_p13.ctor === 'Ok') {
 						return {
 							ctor: '_Tuple2',
 							_0: model,
@@ -15465,9 +15511,9 @@ var _user$project$Main$update = F2(
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
-				default:
-					var _p11 = model.validPostcode;
-					if (_p11.ctor === 'Ok') {
+				case 'GetNearestInfoFromWeb':
+					var _p14 = model.validPostcode;
+					if (_p14.ctor === 'Ok') {
 						return {
 							ctor: '_Tuple2',
 							_0: model,
@@ -15476,6 +15522,14 @@ var _user$project$Main$update = F2(
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{postcode: _p8._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 			}
 		}
 	});
@@ -15549,64 +15603,6 @@ var _user$project$Main$viewHistory = function (history) {
 		_elm_lang$html$Html$ul,
 		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _user$project$Main$historyLinks, history));
-};
-var _user$project$Main$page = function (model) {
-	var _p12 = model.route;
-	switch (_p12.ctor) {
-		case 'HomeRoute':
-			return A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Enter a postcode above'),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$viewHistory(model.history),
-						_1: {ctor: '[]'}
-					}
-				});
-		case 'PostcodeRoute':
-			var combinedResponse = A3(
-				_krisajenkins$remotedata$RemoteData$map2,
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				model.locationInfo,
-				model.nearestInfo);
-			var _p13 = combinedResponse;
-			switch (_p13.ctor) {
-				case 'NotAsked':
-					return _elm_lang$html$Html$text('Initialising.');
-				case 'Loading':
-					return A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Loading.'),
-							_1: {ctor: '[]'}
-						});
-				case 'Failure':
-					return _user$project$Main$viewServerError(_p13._0);
-				default:
-					return _user$project$Main$viewInfo(_p13._0);
-			}
-		case 'InvalidRoute':
-			var _p14 = _elm_lang$core$List$head(_p12._0.context);
-			if (_p14.ctor === 'Just') {
-				return _elm_lang$html$Html$text(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'The ',
-						A2(_elm_lang$core$Basics_ops['++'], _p14._0.description, ' of your postcode is incorrect.')));
-			} else {
-				return _elm_lang$html$Html$text('There is a problem with your postcode.');
-			}
-		default:
-			return _elm_lang$html$Html$text('Not Found');
-	}
 };
 var _user$project$Main$view = function (model) {
 	return A2(
@@ -15708,7 +15704,11 @@ var _user$project$Main$view = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _user$project$Main$page(model),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$viewHistory(model.history),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -15719,7 +15719,7 @@ var _user$project$Main$main = A2(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"message":"Main.Msg","aliases":{"Types.NearestInfoResult":{"type":"{ postcode : String }","args":[]},"Types.Postcode":{"type":"String","args":[]},"Types.LocationInfo":{"type":"{ status : Int, result : Types.LocationInfoResult }","args":[]},"Navigation.Location":{"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }","args":[]},"Types.NearestInfo":{"type":"{ status : Int, result : List Types.NearestInfoResult }","args":[]},"Types.LocationInfoResult":{"type":"{ postcode : String, country : String, region : Maybe.Maybe String }","args":[]},"RemoteData.WebData":{"type":"RemoteData.RemoteData Http.Error a","args":["a"]},"Http.Response":{"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }","args":["body"]}},"unions":{"Main.Msg":{"tags":{"GetNearestInfoFromWeb":[],"GetDataFromWeb":[],"ChangeLocation":["String"],"NearestInfoResponse":["RemoteData.WebData Types.NearestInfo"],"OnLocationChange":["Navigation.Location"],"LocationInfoResponse":["RemoteData.WebData Types.LocationInfo"],"ChangePostcode":["Types.Postcode"]},"args":[]},"Dict.NColor":{"tags":{"Black":[],"BBlack":[],"Red":[],"NBlack":[]},"args":[]},"Http.Error":{"tags":{"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"],"BadUrl":["String"],"NetworkError":[]},"args":[]},"Dict.LeafColor":{"tags":{"LBlack":[],"LBBlack":[]},"args":[]},"Maybe.Maybe":{"tags":{"Nothing":[],"Just":["a"]},"args":["a"]},"Dict.Dict":{"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]},"args":["k","v"]},"RemoteData.RemoteData":{"tags":{"Failure":["e"],"NotAsked":[],"Success":["a"],"Loading":[]},"args":["e","a"]}}},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"message":"Main.Msg","aliases":{"Types.NearestInfoResult":{"type":"{ postcode : String }","args":[]},"Types.Postcode":{"type":"String","args":[]},"Types.LocationInfo":{"type":"{ status : Int, result : Types.LocationInfoResult }","args":[]},"Navigation.Location":{"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }","args":[]},"Types.NearestInfo":{"type":"{ status : Int, result : List Types.NearestInfoResult }","args":[]},"Types.LocationInfoResult":{"type":"{ postcode : String, country : String, region : Maybe.Maybe String }","args":[]},"RemoteData.WebData":{"type":"RemoteData.RemoteData Http.Error a","args":["a"]},"Http.Response":{"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }","args":["body"]}},"unions":{"Main.Msg":{"tags":{"GetNearestInfoFromWeb":[],"ChangeLocation":["String"],"NearestInfoResponse":["RemoteData.WebData Types.NearestInfo"],"OnLocationChange":["Navigation.Location"],"LocationInfoResponse":["RemoteData.WebData Types.LocationInfo"],"ChangePostcode":["Types.Postcode"],"GetLocationInfoFromWeb":[]},"args":[]},"Dict.NColor":{"tags":{"Black":[],"BBlack":[],"Red":[],"NBlack":[]},"args":[]},"Http.Error":{"tags":{"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"],"BadUrl":["String"],"NetworkError":[]},"args":[]},"Dict.LeafColor":{"tags":{"LBlack":[],"LBBlack":[]},"args":[]},"Maybe.Maybe":{"tags":{"Nothing":[],"Just":["a"]},"args":["a"]},"Dict.Dict":{"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]},"args":["k","v"]},"RemoteData.RemoteData":{"tags":{"Failure":["e"],"NotAsked":[],"Success":["a"],"Loading":[]},"args":["e","a"]}}},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

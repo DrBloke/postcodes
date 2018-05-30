@@ -15,6 +15,7 @@ import Json.Decode.Pipeline exposing (decode, required)
 import Task
 import Platform.Cmd exposing (batch)
 import Parser exposing (..)
+import PostcodeParser exposing (..)
 
 
 main : Program Never Model Msg
@@ -62,7 +63,7 @@ type Msg
     | LocationInfoResponse (WebData LocationInfo)
     | NearestInfoResponse (WebData NearestInfo)
     | ChangePostcode Postcode
-    | GetDataFromWeb
+    | GetLocationInfoFromWeb
     | GetNearestInfoFromWeb
 
 
@@ -102,7 +103,7 @@ update msg model =
                     , postcode = decodedPostcodeUrl
                     , validPostcode = parsePostcode decodedPostcodeUrl
                 }
-                    |> update GetDataFromWeb
+                    |> update GetLocationInfoFromWeb
 
         --web response
         LocationInfoResponse response ->
@@ -112,10 +113,7 @@ update msg model =
         NearestInfoResponse response ->
             ( { model | nearestInfo = response }, Cmd.none )
 
-        ChangePostcode postcode ->
-            ( { model | postcode = postcode }, Cmd.none )
-
-        GetDataFromWeb ->
+        GetLocationInfoFromWeb ->
             case model.validPostcode of
                 Ok postcode ->
                     ( model
@@ -125,6 +123,11 @@ update msg model =
                 Err e ->
                     ( model, Cmd.none )
 
+        {--It isn't actually necessary to make two web requests. The second one
+        just gets all the information over again. I chose to do it this way
+        as that's what the exercise requested, and because it illustrates how
+        you might do two subsequent requests. The import bit is in the function
+        page under PostcodeRoute. Here the two responses are combined.--}
         GetNearestInfoFromWeb ->
             case model.validPostcode of
                 Ok postcode ->
@@ -135,9 +138,13 @@ update msg model =
                 Err e ->
                     ( model, Cmd.none )
 
+        --this could be used for autocomplete
+        ChangePostcode postcode ->
+            ( { model | postcode = postcode }, Cmd.none )
 
 
---web request
+
+--web requests
 
 
 getLocationInfo : String -> Cmd Msg
@@ -179,7 +186,8 @@ view model =
             , br [] []
             , br [] []
             ]
-        , page model
+        , page model --this bit depends on the current route
+        , viewHistory model.history
         ]
 
 
@@ -189,7 +197,6 @@ page model =
         HomeRoute ->
             div []
                 [ text "Enter a postcode above"
-                , viewHistory model.history
                 ]
 
         PostcodeRoute postcode ->
@@ -210,6 +217,7 @@ page model =
                     Success combinedInfo ->
                         viewInfo combinedInfo
 
+        --combined info is ( LocationInfo, NearestInfo )
         InvalidRoute e ->
             case (List.head e.context) of
                 Just context ->
