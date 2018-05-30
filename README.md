@@ -3,7 +3,7 @@ A single page application written in Elm for fetching info for UK postcodes.
 
 The app works in elm-live using the --pushstate flag.
 
-Tests can be run with elm-live from the root directory.
+Tests can be run with elm-test from the root directory.
 
 I have implemented the router, the simultaneous fetching of two sets of web data, validation and formatting. I have not implemented an autocomplete but I have added a history function that could be extended to become an autocomplete function.
 
